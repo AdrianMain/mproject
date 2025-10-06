@@ -7,8 +7,10 @@ let personFullName = 'Adrian Jakubek';
 let enterType = 'Wejście open';
 let qrSvg = '';
 let clicked = false;
-let leftTime = '10 min 5 sek';
-//for test
+let leftTime = '1 min 40 sek';
+let green = '#78e710';
+let red = '#e72c2c';
+
 
 function xyz(s:string) {
   return s.replace(/\b\w/g, c => c.toUpperCase());
@@ -18,10 +20,15 @@ function xyz(s:string) {
 function startTimer() {
     let elem = document.getElementById("timeBar");
     let width = 100;
+    const root = document.querySelector(":root");
+    // @ts-ignore
+    root.style.setProperty("--bar-color", green);
     let inter = setInterval(frame, 1000);
     function frame() {
         if (width <= 0) {
             clearInterval(inter);
+            let ele = document.getElementById('jeszcze');
+            ele!.innerHTML = 'KOD WYGASŁ'
         }
         else {
             width --;
@@ -32,7 +39,16 @@ function startTimer() {
     }
 }
 function calcInfo(seconds:number) {
-    let minut = 0
+    let control = true;
+    let minut = 0;
+    if(control) {
+        if(seconds <= 60) {
+            const root = document.querySelector(":root");
+            // @ts-ignore
+            root.style.setProperty("--bar-color", red);
+            control = false;
+        }
+    }
     while (seconds>60) {
         minut++;
         seconds-=60;
@@ -65,6 +81,7 @@ async function handleSubmit(event: Event) {
 </script>
 
 {#if !clicked}
+<div class="formDiv"></div>
 <h2>Witaj użytkowniku Medicover</h2>
 <form on:submit={handleSubmit} autocomplete="on" name="medicoverForm">
     <p>Podaj nazwę ośrodka (np. nazwa siłowni)</p>
@@ -108,9 +125,10 @@ async function handleSubmit(event: Event) {
 
 <!-- Prawdziwa podruba -->
 {:else}
-<div class="strzalka">
-    <img src="arrow.svg" alt="strzałka" width="24" height="24">
-</div>
+
+<button type="button" class="strzalka" on:click={() => location.reload()}>
+  <img src="arrow.svg" alt="strzałka" width="24" height="24" />
+</button>
 <h3>{xyz(placeName)}</h3>
 <div class="main">
 <div class="container">
@@ -125,7 +143,7 @@ async function handleSubmit(event: Event) {
     </div>
 
     <!-- To do!!!!! -->
-    <p class="jeszcze">Kod ważny jeszcze {leftTime}.</p>
+    <p class="jeszcze" id="jeszcze">Kod ważny jeszcze {leftTime}.</p>
     <div id='timeProgress'>
         <div id="timeBar"></div>
     </div>
@@ -137,6 +155,9 @@ async function handleSubmit(event: Event) {
 {/if}
 
 <style>
+:root {
+    --bar-color: #78e710; 
+}
 @font-face {
     font-family: Roboto;
     src: url('$lib/fonts/roboto-font.ttf') format('truetype');
@@ -145,7 +166,6 @@ async function handleSubmit(event: Event) {
     src: url('$lib/fonts/pixel-font.ttf') format('truetype');
     font-family: Pixel;
 }
-
 :global(body) {
     background-color: #111111;
     color: white;
@@ -200,7 +220,7 @@ h3 {
 .jeszcze {
     margin-top: 3vh;
     font-size: 12px;
-    color: #78e710;
+    color: var(--bar-color);
 }
 #timeProgress {
     margin-top: -0.5vh;
@@ -210,9 +230,9 @@ h3 {
 }
 #timeBar {
     width: 83%;/*for start position of timer*/
-    height: 1vh;
+    height: 0.7vh;
     border-radius: 10px;
-    background-color: #78e710;
+    background-color: var(--bar-color);
 }
 .imie {
     margin-top: 5vh;
