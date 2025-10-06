@@ -1,11 +1,11 @@
 <script lang="ts">
-import { toDataURL } from "qrcode";
+import { toString } from "qrcode";
 
 let placeName = '';
 let secretCode = '';
 let personFullName = 'Adrian Jakubek';
 let enterType = 'Wejście open';
-let qrImg = '';
+let qrSvg = '';
 let clicked = false;
 let leftTime = '10 min 5 sek';
 //for test
@@ -15,7 +15,7 @@ function xyz(s:string) {
 }
 
 
-function move() {
+function startTimer() {
     let elem = document.getElementById("timeBar");
     let width = 100;
     let inter = setInterval(frame, 1000);
@@ -48,8 +48,19 @@ function calcInfo(seconds:number) {
 async function handleSubmit(event: Event) {
     event.preventDefault();
     clicked = true;
-    qrImg = await toDataURL(secretCode);
-    move();
+    
+    // Zmiana: Generuj SVG zamiast DataURL
+    qrSvg = await toString(secretCode, {
+        type: 'svg',
+        width: 200,
+        margin: 2,
+        color: {
+            dark: '#000000',
+            light: '#ffffff'
+        }
+    });
+    
+    startTimer();
 }
 </script>
 
@@ -107,7 +118,11 @@ async function handleSubmit(event: Event) {
         <p class="poka">POKAŻ KOD QR</p>
         <p class="poka">DO ZESKANOWANIA</p>
     </div>
-    <img alt="qr" src={qrImg} id="qrIMG">
+    <div class="padpad">
+        <div class="qr-container" id="qrSVG">
+            {@html qrSvg}
+        </div>
+    </div>
 
     <!-- To do!!!!! -->
     <p class="jeszcze">Kod ważny jeszcze {leftTime}.</p>
@@ -124,10 +139,10 @@ async function handleSubmit(event: Event) {
 <style>
 @font-face {
     font-family: Roboto;
-    src: url('roboto-font.ttf');
+    src: url('$lib/fonts/roboto-font.ttf') format('truetype');
 }
 @font-face {
-    src: url('pixel-font.ttf');
+    src: url('$lib/fonts/pixel-font.ttf') format('truetype');
     font-family: Pixel;
 }
 
@@ -165,9 +180,22 @@ h3 {
     line-height: 0.5;
     text-align: center;
 }
-#qrIMG {
-    width: 55vw;
-    height: 55vw;
+.qr-container {
+    width: 50vw;
+    height: 50vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.qr-container :global(svg) {
+    width: 100%;
+    height: 100%;
+    max-width: 50vw;
+    max-height: 50vw;
+}
+.padpad {
+    background-color: white;
+    padding: 4vw;
 }
 .jeszcze {
     margin-top: 3vh;
@@ -208,4 +236,5 @@ h3 {
     align-items: center;
     justify-content: center;
 }
+
 </style>

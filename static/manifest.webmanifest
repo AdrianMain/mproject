@@ -5,6 +5,7 @@
   "display": "standalone",
   "theme_color": "#161617",
   "background_color": "#161617",
+  "version": "21.37",
   "icons": [
     {
       "src": "logo.png",
