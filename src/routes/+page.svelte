@@ -81,9 +81,10 @@ async function handleSubmit(event: Event) {
 </script>
 
 {#if !clicked}
-<div class="formDiv"></div>
+<!-- FORMULARZ DO WPROWADZANIA DANYCH -->
+<div class="formDiv">
 <h2>Witaj użytkowniku Medicover</h2>
-<form on:submit={handleSubmit} autocomplete="on" name="medicoverForm">
+<form on:submit={handleSubmit} autocomplete="on" name="medicoverForm" class="formClass">
     <p>Podaj nazwę ośrodka (np. nazwa siłowni)</p>
     <input
         name="sport"
@@ -110,7 +111,8 @@ async function handleSubmit(event: Event) {
         bind:value={secretCode}
         placeholder="Kod Medicover"
         required
-    ><br><br>
+    >
+    <p>Imie nazwisko</p>
     <input
         name="personal"
         type="text"
@@ -119,10 +121,9 @@ async function handleSubmit(event: Event) {
         required
         placeholder="Imie Nazwisko"
     ><br><br>
-
-    <button type="submit">Wygeneruj</button>
+    <button class="tak" type="submit">Wygeneruj</button>
 </form>
-
+</div>
 <!-- Prawdziwa podruba -->
 {:else}
 
@@ -256,5 +257,51 @@ h3 {
     align-items: center;
     justify-content: center;
 }
+
+
+/* WPROWADZANIE DANYCH */
+.formDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.formClass {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+input {
+    border-radius: 5px;
+    padding: 5px;
+    font-family: Roboto;
+    text-align: center;
+}
+
+button.tak {
+    margin-top: 4vh;
+    padding: 2vh 10vw;
+    border-radius: 10px;
+    border: 0;
+    background-color: rgb(255, 56, 86);
+    letter-spacing: 1.5px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: rgb(201, 46, 70) 0px 10px 0px 0px;
+    color: hsl(0, 0%, 100%);
+    cursor: pointer;
+}
+
+button.tak:hover {
+  box-shadow: rgb(201, 46, 70) 0px 7px 0px 0px;
+}
+
+button.tak:active {
+  background-color: rgb(255, 56, 86);
+  /*50, 168, 80*/
+  box-shadow: rgb(201, 46, 70) 0px 0px 0px 0px;
+  transform: translateY(5px);
+  transition: 200ms;
+}
+
 
 </style>
